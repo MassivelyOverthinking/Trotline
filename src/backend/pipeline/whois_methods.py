@@ -11,7 +11,7 @@ from datetime import timezone
 from typing import Optional, Union, Dict
 from whois.exceptions import WhoisError, WhoisCommandFailedError, WhoisDomainNotFoundError
 
-from src.backend.pipeline.helper import extract_hostname, is_domain_typosquatted
+from backend.pipeline.helper_methods import extract_hostname, is_domain_typosquatted
 from src.backend.pipeline.dataset import typosquatted_domains_set
 
 # ----------------------------------------
