@@ -5,8 +5,11 @@
 import tldextract as tld
 import math
 
+from typing import Optional, Union, Dict
 from tldextract import ExtractResult
 from pyxdameraulevenshtein import damerau_levenshtein_distance as pdl_distance
+
+from src.backend.pipeline.dataset import suspicious_keywords_set
 
 # ----------------------------------------
 # PIPELINE HELPER METHODS
@@ -57,3 +60,17 @@ def calculate_shannon_entropy(text: str) -> float:
    entropy = -sum([p * math.log2(p) for p in probabilities])
 
    return entropy
+
+# Finalised Wrapper-method for determining Shannon Entropy + Suspicious Keywords.
+# Returns a Python Dict-object.
+def retrieve_remaining_data(url: str) -> Dict[str, Union[float, int]]:
+  # Gather all information into Results-dict
+  results = {
+      "domain_entropy": calculate_shannon_entropy(text=url),
+      "contains_sus_keyword": contains_suspicious_keyword(
+          text=url,
+          keywords=suspicious_keywords_set
+      )
+  }
+
+  return results
