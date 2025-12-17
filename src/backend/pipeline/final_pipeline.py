@@ -27,9 +27,16 @@ def finalised_data_pipeline(url: str) -> pd.Series:
   # Concat Dict-objects into single instance.
   results = parsed_url_data | extracted_url_data | character_based_data | remaining_data
 
+  # 'Url' key-value pair is no longer needed -> Delete the pair.
+  try:
+    del results["url"]
+  except KeyError as kerr:
+    raise kerr
+
   # Convert Booleans to binary.
   for key, value in results.items():
     if isinstance(value, bool):
       results[key] = int(value)
 
-  return results
+  # Convert to pd.Series-object and return the final data.
+  return pd.Series(results)
