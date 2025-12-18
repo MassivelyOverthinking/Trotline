@@ -5,6 +5,7 @@
 import pandas as pd
 import redis as rds
 import xgboost as xgb
+import json
 
 from fastapi import APIRouter, Request
 from fastapi.exceptions import HTTPException
@@ -55,3 +56,19 @@ async def retrieve_url_status(url_string: str, request: Request):
             status_code=422,
             detail="Corrupted data - URL data was processed incorrectly"
         )
+    
+    prediction = xgb_model.predict(url_data)
+
+    results = {
+        "url": url_string,
+        "status": prediction 
+    }
+
+    rds_cache.set(
+        name=url_string,
+        value=prediction
+    )
+
+    s3_db
+
+    return json.dumps(results, indent=4)
