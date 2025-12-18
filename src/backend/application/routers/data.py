@@ -10,7 +10,6 @@ import json
 from fastapi import APIRouter, Request
 from fastapi.exceptions import HTTPException
 from botocore.client import BaseClient
-from typing import Optional, Union
 
 from src.backend.pipeline.final_pipeline import finalised_data_pipeline
 
@@ -48,7 +47,7 @@ async def retrieve_url_status(url_string: str, request: Request):
     if cached_url_data is not None:
         return cached_url_data["status"]
     
-    # Convert the URL-String using 'Finalized_data_pipeline'.
+    # 2. Step -> Convert the URL-String using 'Finalized_data_pipeline'.
     url_data = finalised_data_pipeline(url=url_string)
     # Check if the data was converted correctly.
     if not isinstance(url_data, pd.Series):
@@ -57,6 +56,7 @@ async def retrieve_url_status(url_string: str, request: Request):
             detail="Corrupted data - URL data was processed incorrectly"
         )
     
+    # 3. Step -> Make URL prediction using XGBoost model.
     prediction = xgb_model.predict(url_data)
 
     results = {
@@ -68,7 +68,5 @@ async def retrieve_url_status(url_string: str, request: Request):
         name=url_string,
         value=prediction
     )
-
-    s3_db
 
     return json.dumps(results, indent=4)
