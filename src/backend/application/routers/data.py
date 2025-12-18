@@ -9,6 +9,7 @@ from fastapi.exceptions import HTTPException
 from typing import Optional, Union
 
 from src.backend.pipeline.final_pipeline import finalised_data_pipeline
+from src.backend.application.main import app
 
 # ----------------------------------------
 # FASTAPI DATA ENDPOINTS
@@ -41,3 +42,5 @@ async def retrieve_url_status(url_string: str):
             status_code=422,
             detail="Corrupted data - URL data was processed incorrectly"
         )
+    
+    prediction = app.state.model.predict(url_data)

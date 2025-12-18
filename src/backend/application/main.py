@@ -2,7 +2,13 @@
 # IMPORTS
 # ----------------------------------------
 
+import xgboost as xgb
+import boto3 as b3
+import redis as rds
+import os
+
 from fastapi import FastAPI
+from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 
 from routers import data
@@ -11,10 +17,30 @@ from routers import data
 # FASTAPI APPLICATION SETUP
 # ----------------------------------------
 
+load_dotenv()
+
 # Lifespan functions -> XGBoost model configured on 'Startup'.
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    app.state.model = xgb.Booster().load_model("trotline_xgb_model.json")
+
+    app.state.database = b3.client(
+        "s3",
+        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+        region_name=os.getenv("AWS_REGION_NAME")
+    )
+
+    app.state.cache = rds.Redis(
+        host="random-endpoint-aws",
+        port=6379,
+        decode_responses=True,
+        ssl=True
+    )
+
     yield
+    
+    app.state.cache.close()
 
 summary = """
 Trotline is a phishing URL detection service built with FastAPI, 
@@ -32,13 +58,6 @@ app = FastAPI(
     include_in_schema=True,
     lifespan=lifespan
 )
-
-# ----------------------------------------
-# XGBOOST MODEL SETUP
-# ----------------------------------------
-
-# Internal XGBoost Model for predictions.
-global xgb_model
 
 # ----------------------------------------
 # API ROUTE CONFIGURATION
