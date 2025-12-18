@@ -3,13 +3,15 @@
 # ----------------------------------------
 
 import pandas as pd
+import redis as rds
+import xgboost as xgb
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from fastapi.exceptions import HTTPException
+from botocore.client import BaseClient
 from typing import Optional, Union
 
 from src.backend.pipeline.final_pipeline import finalised_data_pipeline
-from src.backend.application.main import app
 
 # ----------------------------------------
 # FASTAPI DATA ENDPOINTS
@@ -27,12 +29,23 @@ router = APIRouter(
     tags=["data", "url", "phishing"],
     responses={404: {"Description": "Operation not found!"}}
 )
-async def retrieve_url_status(url_string: str):
+async def retrieve_url_status(url_string: str, request: Request):
+    # Safety check for URL-string param -> must be of Type: str
     if not isinstance(url_string, str):
         raise HTTPException(
             status_code=415,
             detail="Invalid data type - URL data must be of Type: str"
         )
+
+    # Retrieve the DB, Cache and Model connections from internal FastAPI.
+    s3_db:      BaseClient = request.app.state.s3
+    rds_cache:  rds.Redis = request.app.state.cache
+    xgb_model:  xgb.Booster = request.app.state.model
+
+    # 1. Step -> Check Redis Cache for stored key-value pair.
+    cached_url_data = rds_cache.get(name=url_string)
+    if cached_url_data is not None:
+        return cached_url_data["status"]
     
     # Convert the URL-String using 'Finalized_data_pipeline'.
     url_data = finalised_data_pipeline(url=url_string)
@@ -42,5 +55,3 @@ async def retrieve_url_status(url_string: str):
             status_code=422,
             detail="Corrupted data - URL data was processed incorrectly"
         )
-    
-    prediction = app.state.model.predict(url_data)

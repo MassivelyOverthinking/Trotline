@@ -17,13 +17,16 @@ from routers import data
 # FASTAPI APPLICATION SETUP
 # ----------------------------------------
 
+# Load .env variables using dotenv
 load_dotenv()
 
 # Lifespan functions -> XGBoost model configured on 'Startup'.
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Load XGBoost model from JSON-file -> Add to app.state
     app.state.model = xgb.Booster().load_model("trotline_xgb_model.json")
 
+    # Load S3 Database session (AWS) -> Add to app.state
     app.state.database = b3.client(
         "s3",
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
@@ -31,6 +34,7 @@ async def lifespan(app: FastAPI):
         region_name=os.getenv("AWS_REGION_NAME")
     )
 
+    # Load Redis Caching session (AWS) -> Add to app.state
     app.state.cache = rds.Redis(
         host="random-endpoint-aws",
         port=6379,
@@ -38,8 +42,9 @@ async def lifespan(app: FastAPI):
         ssl=True
     )
 
-    yield
-    
+    yield       # Lifespan seperator
+
+    # Close the Redis Caching session.
     app.state.cache.close()
 
 summary = """
