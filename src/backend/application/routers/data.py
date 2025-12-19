@@ -69,4 +69,4 @@ async def retrieve_url_status(url_string: str, request: Request):
         value=prediction
     )
 
-    return json.dumps(results, indent=4)
+    return results
