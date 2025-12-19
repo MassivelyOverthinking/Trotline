@@ -11,7 +11,6 @@ from fastapi.exceptions import HTTPException
 from botocore.client import BaseClient
 
 from src.backend.pipeline.final_pipeline import finalised_data_pipeline_for_web
-from src.backend.pipeline.final_pipeline import finalised_data_pipeline_for_py
 
 # ----------------------------------------
 # FASTAPI DATA ENDPOINTS -> WEB APP

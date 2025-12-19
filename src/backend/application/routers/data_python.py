@@ -9,8 +9,9 @@ import xgboost as xgb
 from fastapi import APIRouter, Request
 from fastapi.exceptions import HTTPException
 from botocore.client import BaseClient
+from typing import Dict, Any
 
-from src.backend.pipeline.final_pipeline import finalised_data_pipeline
+from src.backend.pipeline.final_pipeline import finalised_data_pipeline_for_py
 
 # ----------------------------------------
 # FASTAPI DATA ENDPOINTS -> PYPI.ORG
@@ -41,10 +42,11 @@ async def retrieve_url_status_py(url_string: str, request: Request):
     rds_cache:  rds.Redis = request.app.state.cache
     xgb_model:  xgb.Booster = request.app.state.model
     
-    # 1. Step -> Convert the URL-String using 'Finalized_data_pipeline'.
-    url_data: pd.Series = finalised_data_pipeline(url=url_string)
+    # 1. Step -> Convert the URL-String using 'Finalized_data_pipeline_for_py'.
+    # Conversion specifically for PyPi.org package.
+    url_data: Dict[str, Any] = finalised_data_pipeline_for_py(url=url_string)
     # Check if the data was converted correctly.
-    if not isinstance(url_data, pd.Series):
+    if not isinstance(url_data, dict):
         raise HTTPException(
             status_code=422,
             detail="Corrupted data - URL data was processed incorrectly"
@@ -55,7 +57,8 @@ async def retrieve_url_status_py(url_string: str, request: Request):
 
     results = {
         "url": url_string,
-        "status": prediction 
+        "status": prediction,
+        "data": url_data
     }
 
     return results
