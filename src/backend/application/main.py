@@ -11,7 +11,7 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 
-from routers import data
+from backend.application.routers import data_web, data_python
 
 # ----------------------------------------
 # FASTAPI APPLICATION SETUP
@@ -78,7 +78,8 @@ app = FastAPI(
 # ----------------------------------------
 
 # FastAPI Routes (Data).
-app.include_router(data.router)
+app.include_router(data_web.router)
+app.include_router(data_python.router)
 
 @app.get("/")
 async def root():
