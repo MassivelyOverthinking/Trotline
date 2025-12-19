@@ -33,7 +33,7 @@ async def lifespan(app: FastAPI):
 
     # Load Redis Caching session (AWS) -> Add to app.state
     rds_cache = rds.Redis(
-        host="random-endpoint-aws",
+        host="redis-trotline-data-uoouvs.serverless.eun1.cache.amazonaws.com:6379",
         port=6379,
         decode_responses=True,
         ssl=True

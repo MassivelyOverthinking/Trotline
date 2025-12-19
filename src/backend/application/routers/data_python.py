@@ -55,10 +55,6 @@ async def retrieve_url_status_py(url_string: str, request: Request):
     # 2. Step -> Make URL prediction using XGBoost model.
     prediction = xgb_model.predict(url_data)
 
-    results = {
-        "url": url_string,
-        "status": prediction,
-        "data": url_data
-    }
+    results = url_data | {"status": prediction}
 
     return results
