@@ -5,7 +5,6 @@
 import pandas as pd
 import redis as rds
 import xgboost as xgb
-import json
 
 from fastapi import APIRouter, Request
 from fastapi.exceptions import HTTPException
@@ -48,7 +47,7 @@ async def retrieve_url_status(url_string: str, request: Request):
         return cached_url_data["status"]
     
     # 2. Step -> Convert the URL-String using 'Finalized_data_pipeline'.
-    url_data = finalised_data_pipeline(url=url_string)
+    url_data: pd.Series = finalised_data_pipeline(url=url_string)
     # Check if the data was converted correctly.
     if not isinstance(url_data, pd.Series):
         raise HTTPException(

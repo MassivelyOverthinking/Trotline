@@ -23,11 +23,8 @@ load_dotenv()
 # Lifespan functions -> XGBoost model configured on 'Startup'.
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Load XGBoost model from JSON-file -> Add to app.state
-    app.state.model = xgb.Booster().load_model("trotline_xgb_model.json")
-
     # Load S3 Database session (AWS) -> Add to app.state
-    app.state.database = b3.client(
+    s3_client = b3.client(
         "s3",
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
         aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
@@ -35,12 +32,24 @@ async def lifespan(app: FastAPI):
     )
 
     # Load Redis Caching session (AWS) -> Add to app.state
-    app.state.cache = rds.Redis(
+    rds_cache = rds.Redis(
         host="random-endpoint-aws",
         port=6379,
         decode_responses=True,
         ssl=True
     )
+
+    model_response = s3_client.get_object(
+        Bucket="xgb-model",
+        Key="trotline-xgb-model.json"
+    )
+
+    # Load XGBoost model from JSON-file -> Add to app.state
+    xgb_model = xgb.Booster().load_model(model_response)
+
+    app.state.model = xgb_model
+    app.state.cache = rds_cache
+    app.state.s3 = s3_client
 
     yield       # Lifespan seperator
 
