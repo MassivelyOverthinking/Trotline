@@ -9,7 +9,8 @@ import os
 
 from fastapi import FastAPI
 from dotenv import load_dotenv
-from contextlib import asynccontextmanager
+from contextlib import contextmanager
+from botocore.response import StreamingBody
 
 from backend.application.routers import data_web, data_python
 
@@ -21,7 +22,7 @@ from backend.application.routers import data_web, data_python
 load_dotenv()
 
 # Lifespan functions -> XGBoost model configured on 'Startup'.
-@asynccontextmanager
+@contextmanager
 async def lifespan(app: FastAPI):
     # Load S3 Database session (AWS) -> Add to app.state
     s3_client = b3.client(
@@ -33,19 +34,24 @@ async def lifespan(app: FastAPI):
 
     # Load Redis Caching session (AWS) -> Add to app.state
     rds_cache = rds.Redis(
-        host="redis-trotline-data-uoouvs.serverless.eun1.cache.amazonaws.com:6379",
+        host="redis-trotline-data-uoouvs.serverless.eun1.cache.amazonaws.com",
         port=6379,
         decode_responses=True,
         ssl=True
     )
 
-    model_response = s3_client.get_object(
+    model_response: StreamingBody = s3_client.get_object(
         Bucket="xgb-model",
         Key="trotline-xgb-model.json"
     )
 
+    model_body = model_response["Body"]
+    model_bytes = model_body.read()
+    model_json = model_bytes.decode('utf-8')
+
     # Load XGBoost model from JSON-file -> Add to app.state
-    xgb_model = xgb.Booster().load_model(model_response)
+    xgb_model = xgb.Booster()
+    xgb_model.load_model(model_json)
 
     app.state.model = xgb_model
     app.state.cache = rds_cache

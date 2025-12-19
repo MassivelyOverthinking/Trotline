@@ -44,7 +44,7 @@ async def retrieve_url_status_web(url_string: str, request: Request):
     # 1. Step -> Check Redis Cache for stored key-value pair.
     cached_url_data = rds_cache.get(name=url_string)
     if cached_url_data is not None:
-        return cached_url_data["status"]
+        return {"status": cached_url_data["status"]}
     
     # 2. Step -> Convert the URL-String using 'Finalized_data_pipeline'.
     url_data: pd.Series = finalised_data_pipeline_for_web(url=url_string)
