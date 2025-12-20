@@ -6,10 +6,12 @@ boto3==1.42.12
 botocore==1.42.12
 certifi==2025.11.12
 charset-normalizer==3.4.4
+click==8.3.1
 colorlog==6.10.1
 fastapi==0.124.4
 filelock==3.20.1
 greenlet==3.3.0
+h11==0.16.0
 idna==3.11
 jmespath==1.0.1
 joblib==1.5.3
@@ -23,10 +25,12 @@ pandas==2.3.3
 pydantic==2.12.5
 pydantic_core==2.41.5
 python-dateutil==2.9.0.post0
+python-dotenv==1.2.1
 python-whois==0.9.6
 pytz==2025.2
 pyxDamerauLevenshtein==1.9.0
 PyYAML==6.0.3
+redis==7.1.0
 requests==2.32.5
 requests-file==3.0.1
 s3transfer==0.16.0
@@ -42,4 +46,5 @@ typing-inspection==0.4.2
 typing_extensions==4.15.0
 tzdata==2025.3
 urllib3==2.6.2
+uvicorn==0.38.0
 xgboost==3.1.2

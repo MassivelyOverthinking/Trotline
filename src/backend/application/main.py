@@ -2,7 +2,6 @@
 # IMPORTS
 # ----------------------------------------
 
-import xgboost as xgb
 import boto3 as b3
 import redis as rds
 import os
@@ -12,8 +11,8 @@ from dotenv import load_dotenv
 from contextlib import contextmanager
 from botocore.response import StreamingBody
 
-from backend.application.routers import data_web, data_python
-from backend.application.utility import from_reponse_to_model
+from src.backend.application.routers import data_web, data_python
+from src.backend.application.utility import from_reponse_to_model
 
 # ----------------------------------------
 # FASTAPI APPLICATION SETUP
@@ -24,7 +23,10 @@ load_dotenv()
 
 # Lifespan functions -> XGBoost model configured on 'Startup'.
 @contextmanager
-async def lifespan(app: FastAPI):
+def lifespan(app: FastAPI):
+    # Lazy Imports
+    import xgboost as xgb
+
     # Load S3 Database session (AWS) -> Add to app.state
     s3_client = b3.client(
         "s3",
@@ -48,7 +50,7 @@ async def lifespan(app: FastAPI):
     )
 
     # Convert StreamingBody-object to finalised XGBoost model.
-    xgb_model = from_reponse_to_model(model_response)
+    xgb_model: xgb.Booster = from_reponse_to_model(model_response)
 
     # Load all session data into app.state configuration -> Lifespan.
     app.state.model = xgb_model

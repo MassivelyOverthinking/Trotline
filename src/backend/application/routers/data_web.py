@@ -4,7 +4,6 @@
 
 import pandas as pd
 import redis as rds
-import xgboost as xgb
 
 from fastapi import APIRouter, Request
 from fastapi.exceptions import HTTPException
@@ -39,7 +38,7 @@ async def retrieve_url_status_web(url_string: str, request: Request):
     # Retrieve the DB, Cache and Model connections from internal FastAPI.
     s3_db:      BaseClient = request.app.state.s3
     rds_cache:  rds.Redis = request.app.state.cache
-    xgb_model:  xgb.Booster = request.app.state.model
+    xgb_model = request.app.state.model
 
     # 1. Step -> Check Redis Cache for stored key-value pair.
     cached_url_data = rds_cache.get(name=url_string)
