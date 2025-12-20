@@ -41,13 +41,16 @@ async def lifespan(app: FastAPI):
         ssl=True
     )
 
+    # Load model data from session (AWS) S3.
     model_response: StreamingBody = s3_client.get_object(
         Bucket="xgb-model",
         Key="trotline-xgb-model.json"
     )
 
+    # Convert StreamingBody-object to finalised XGBoost model.
     xgb_model = from_reponse_to_model(model_response)
 
+    # Load all session data into app.state configuration -> Lifespan.
     app.state.model = xgb_model
     app.state.cache = rds_cache
     app.state.s3 = s3_client
@@ -79,8 +82,8 @@ app = FastAPI(
 # ----------------------------------------
 
 # FastAPI Routes (Data).
-app.include_router(data_web.router)
-app.include_router(data_python.router)
+app.include_router(data_web.router)         # Route to Web-oriented API Endpoints.
+app.include_router(data_python.router)      # Route to PyPi-oriented API Endpoints. 
 
 @app.get("/")
 async def root():
