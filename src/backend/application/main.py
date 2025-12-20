@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from contextlib import contextmanager
 from botocore.response import StreamingBody
 
-from src.backend.application.routers import data_web, data_python
+from src.backend.application.routers import data_web
 from src.backend.application.utility import from_reponse_to_model
 
 # ----------------------------------------
@@ -84,8 +84,7 @@ app = FastAPI(
 # ----------------------------------------
 
 # FastAPI Routes (Data).
-app.include_router(data_web.router)         # Route to Web-oriented API Endpoints.
-app.include_router(data_python.router)      # Route to PyPi-oriented API Endpoints. 
+app.include_router(data_web.router)         # Route to Web-oriented API Endpoints. 
 
 @app.get("/")
 async def root():
