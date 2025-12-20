@@ -18,12 +18,29 @@ class TrotResult:
         self.data: dict = json.loads(data)
 
     @property
-    def url(self):
+    def url(self) -> str:
         return self.data["url"]
     
     @property
-    def status(self):
+    def status(self) -> bool:
         return self.data["status"]
+
+    @property
+    def is_https(self) -> bool:
+        return self.data["is_https"]
+    
+    @property
+    def domain_entropy(self) -> float:
+        return self.data["domain_entropy"]
+    
+    @property
+    def whois_registered(self) -> bool:
+        registration = self.data["days_since_whois_reg"]
+        return (registration is not None and registration != 0)
+    
+    @property
+    def typosquatted(self) -> bool:
+        return self.data["is_typosquatted"]
     
     def to_dict(self):
         return self.data

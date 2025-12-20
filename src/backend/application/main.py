@@ -13,6 +13,7 @@ from contextlib import contextmanager
 from botocore.response import StreamingBody
 
 from backend.application.routers import data_web, data_python
+from backend.application.utility import from_reponse_to_model
 
 # ----------------------------------------
 # FASTAPI APPLICATION SETUP
@@ -45,13 +46,7 @@ async def lifespan(app: FastAPI):
         Key="trotline-xgb-model.json"
     )
 
-    model_body = model_response["Body"]
-    model_bytes = model_body.read()
-    model_json = model_bytes.decode('utf-8')
-
-    # Load XGBoost model from JSON-file -> Add to app.state
-    xgb_model = xgb.Booster()
-    xgb_model.load_model(model_json)
+    xgb_model = from_reponse_to_model(model_response)
 
     app.state.model = xgb_model
     app.state.cache = rds_cache
