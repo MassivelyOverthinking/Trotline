@@ -35,14 +35,6 @@ def lifespan(app: FastAPI):
         region_name=os.getenv("AWS_REGION_NAME")
     )
 
-    # Load Redis Caching session (AWS) -> Add to app.state
-    rds_cache = rds.Redis(
-        host="redis-trotline-data-uoouvs.serverless.eun1.cache.amazonaws.com",
-        port=6379,
-        decode_responses=True,
-        ssl=True
-    )
-
     # Load model data from session (AWS) S3.
     model_response: StreamingBody = s3_client.get_object(
         Bucket="xgb-model",
@@ -54,7 +46,6 @@ def lifespan(app: FastAPI):
 
     # Load all session data into app.state configuration -> Lifespan.
     app.state.model = xgb_model
-    app.state.cache = rds_cache
     app.state.s3 = s3_client
 
     yield       # Lifespan seperator
