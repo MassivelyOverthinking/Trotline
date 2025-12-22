@@ -37,7 +37,7 @@ def lifespan(app: FastAPI):
 
     # Load model data from session (AWS) S3.
     model_response: StreamingBody = s3_client.get_object(
-        Bucket="xgb-model",
+        Bucket="arn:aws:s3:eu-north-1:212282292075:accesspoint/xgb-model",
         Key="trotline-xgb-model.json"
     )
 
@@ -49,9 +49,6 @@ def lifespan(app: FastAPI):
     app.state.s3 = s3_client
 
     yield       # Lifespan seperator
-
-    # Close the Redis Caching session.
-    app.state.cache.close()
 
 summary = """
 Trotline is a phishing URL detection service built with FastAPI, 
