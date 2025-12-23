@@ -27,6 +27,27 @@ router = APIRouter(
     responses={404: {"Description": "Operation not found!"}}
 )
 async def retrieve_url_status_web(url_string: str, request: Request):
+    """
+    Parse the URL-string recieved from external HTTP Request using internal Pipeline functions
+    and feed the numerical data output to internal XGBoost inference model.
+
+    Parameters
+    ----------
+    url : str
+        The URL-string to be parsed & tested by XGBoost inference model.
+    request : fastapi.Request
+        Internal connection allowing access to fastapi state.
+
+    Returns
+    -------
+    dict[str, Union[str, int]]
+        JSON formatted response to HTTP Request.
+
+    Exceptions
+    ----------
+    HTTPException
+        Raised if URL param is not str-type or parsed numerical data is incorrect.
+    """
     # Safety check for URL-string param -> must be of Type: str
     if not isinstance(url_string, str):
         raise HTTPException(

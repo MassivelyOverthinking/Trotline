@@ -2,7 +2,6 @@
 # IMPORTS
 # ----------------------------------------
 
-import tempfile
 import xgboost as xgb
 
 from botocore.response import StreamingBody
