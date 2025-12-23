@@ -38,7 +38,7 @@ def lifespan(app: FastAPI):
     # Load model data from session (AWS) S3.
     model_response: StreamingBody = s3_client.get_object(
         Bucket="arn:aws:s3:eu-north-1:212282292075:accesspoint/xgb-model",
-        Key="trotline-xgb-model.json"
+        Key="XGBoost-model.ubj"
     )
 
     # Convert StreamingBody-object to finalised XGBoost model.

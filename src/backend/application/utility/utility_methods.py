@@ -18,11 +18,8 @@ def from_reponse_to_model(body: StreamingBody) -> xgb.Booster:
     if not model_bytes:
         raise ModuleNotFoundError("XGBoost Model file not loaded correctly!")
     
-    with tempfile.NamedTemporaryFile(suffix=".json") as tmp:
-        tmp.write(model_bytes)
-        tmp.flush()
-        xgb_model = xgb.Booster()
-        xgb_model.load_model(tmp.name)
+    xgb_model = xgb.Booster()
+    xgb_model.load_model(bytearray(model_bytes))
 
     return xgb_model
 
