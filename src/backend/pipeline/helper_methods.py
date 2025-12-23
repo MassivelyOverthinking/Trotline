@@ -18,11 +18,39 @@ from src.backend.pipeline.dataset import suspicious_keywords_set
 # Check the number of subdomains contained within the main URL domain.
 # As subdomains are commonly separated by period symbols - The method check for their presence.
 def num_of_subdomains(hostname: str) -> int:
+  """
+  Check the number of distinct subdomains present in the hostname by dividing into lesser domain 
+  instaces using - Utility method in Trotline finalised Data Pipeline.
+  
+  Parameters
+  ----------
+  hostname : str
+    String representation of URL hostname.
+
+  Returns
+  -------
+  int
+    Number of unique subdomains present in specified hostname. 
+  """
   return hostname.count(".") - 1
 
 # Extract the hostname from the specified URL -> tldextract-package.
 # Helper method for extracting the unabridged hostname.
 def extract_hostname(url: str) -> ExtractResult:
+  """
+  Method for extracting domain-related information - fx. hostname, extensions, path etc. - from 
+  specified URL-string - Utility method in Trotline finalised Data Pipeline.
+
+  Parameters
+  ----------
+  url : str
+    URL-string to extract domain instance from.
+
+  Returns
+  -------
+  tldextract.ExtractResult
+    Custom data-class for storing the extracted URL information.
+  """
   return tld.extract(url)
 
 # Check if the specified domain is Typosquatted using Damerau-Levenshtein Distance
