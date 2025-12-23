@@ -11,6 +11,21 @@ from typing import Dict, Union
 
 # Count the apperance of special character instances in the specified URL.
 def categorize_special_chars(text: str) -> Dict[str, int]:
+  """
+  Utilise Python native 'Counter' to count the instances of special chars & digits in the specified
+  URL-string - Utility method in Trotline finalised Data Pipeline.
+  
+  Parameters
+  ----------
+  text : str
+    URL-string to be parses & data extracted from.
+
+  Returns
+  -------
+  Dict[str, int]
+    Dictionary of special chars + digits and the number of individual occurences.
+  """
+
   counter = Counter(text)
 
   return {
@@ -42,6 +57,20 @@ def categorize_special_chars(text: str) -> Dict[str, int]:
 # Finalized Wrapper method for extracting, processing and formulating Character-based data.
 # Returns a Python Dict-object.
 def retrieve_character_based_data(url: str) -> Dict[str, Union[float, int]]:
+  """
+  Wrapper method for extracting character-based numerical data from specified URL-string - 
+  Utility method in Trotline finalised Data Pipeline.
+
+  Parameters
+  ----------
+  url: str
+    URL-string to be parses & data extracted from.
+
+  Returns
+  -------
+  Dict[str, float | int]
+    Dictionary format of extracted character-based data.
+  """
   # Extract the necessary numerical data from URL
   url_length = len(url)
 

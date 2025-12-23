@@ -3,7 +3,7 @@
 # ----------------------------------------
 
 import boto3 as b3
-import redis as rds
+import xgboost as xgb
 import os
 
 from fastapi import FastAPI
@@ -24,9 +24,6 @@ load_dotenv()
 # Lifespan functions -> XGBoost model configured on 'Startup'.
 @contextmanager
 def lifespan(app: FastAPI):
-    # Lazy Imports
-    import xgboost as xgb
-
     # Load S3 Database session (AWS) -> Add to app.state
     s3_client = b3.client(
         "s3",
