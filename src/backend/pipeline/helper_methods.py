@@ -88,7 +88,8 @@ def is_domain_typosquatted(hostname: ExtractResult, domains: list[str], threshol
 def contains_suspicious_domain_extension(domain: str, extensions: list[str]) -> bool:
   """
   Check if the specified URL-string contains any suspicious domain extensions that is commonly
-  associated with Phishing attacks or general cyber scams.
+  associated with Phishing attacks or general cyber scams - Utility method in Trotline
+  finalised Data Pipeline.
   
   Parameters
   ----------
@@ -111,6 +112,23 @@ def contains_suspicious_domain_extension(domain: str, extensions: list[str]) -> 
 # Check if the specified domain includes one or more suspicious keywords
 # commonly associated with Phishing attacks.
 def contains_suspicious_keyword(text: str, keywords: list[str]) -> bool:
+  """
+  Check if the specified URL-string contains any instances of suspicious keywords that are commonly
+  associated with Phishing attacks or general cyber scams - Utility method in Trotline
+  finalised Data Pipeline.
+  
+  Parameters
+  ----------
+  text : str
+    String representation of the URL to be checked. 
+  keywords : list[str]
+    List of specified keywords to check the Text param against.
+
+  Returns
+  -------
+  bool
+    Returns True if the URL contains at least one keywords from the specified list.
+  """
   for keyword in keywords:
     if keyword in text:
       return True
