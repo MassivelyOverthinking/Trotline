@@ -86,6 +86,22 @@ def is_domain_typosquatted(hostname: ExtractResult, domains: list[str], threshol
 # Check if the specified domain ends with an exention
 # that is commonly utilized in Typosquatting attacks
 def contains_suspicious_domain_extension(domain: str, extensions: list[str]) -> bool:
+  """
+  Check if the specified URL-string contains any suspicious domain extensions that is commonly
+  associated with Phishing attacks or general cyber scams.
+  
+  Parameters
+  ----------
+  domain : str
+    String representation of the domain to be checked.
+  extensions : list[str]
+    List of distinct URL extensions (.ru, .xyz) to check the domain param against.
+
+  Returns
+  -------
+  bool
+    Returns True if the domain ends with one of the extensions provided in the list.
+  """
   for extension in extensions:
     if domain.endswith(extension):
       return True
