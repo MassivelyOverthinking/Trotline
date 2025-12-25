@@ -159,6 +159,20 @@ def calculate_shannon_entropy(text: str) -> float:
 # Finalised Wrapper-method for determining Shannon Entropy + Suspicious Keywords.
 # Returns a Python Dict-object.
 def retrieve_remaining_data(url: str) -> Dict[str, Union[float, int]]:
+  """
+  Wrapper method for calculating Shannon Entropy & checking if string contains a suspicious keyword
+  for specified URL - Utility method in Trotline finalised Data Pipeline.
+  
+  Parameters
+  ----------
+  url : str
+    String representation of the URL to be checked.
+
+  Returns
+  -------
+  dict[str, float | int]
+    A Python dictionary of relevant URL-related information.
+  """
   # Gather all information into Results-dict
   results = {
       "domain_entropy": calculate_shannon_entropy(text=url),
