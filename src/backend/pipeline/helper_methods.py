@@ -136,11 +136,25 @@ def contains_suspicious_keyword(text: str, keywords: list[str]) -> bool:
 
 # Calculate the Shannon Entropy (Degree of Unpredictability) for the specified domain.
 def calculate_shannon_entropy(text: str) -> float:
+  """
+  Calculate Shannon Entropy, the average uncertainty and/or unpredictability in a source string,
+  for the specified text string - Utility method in Trotline finalised Data Pipeline.
+   
+  Parameters
+  ----------
+  text : str
+    String to calculate the information entropy on.
 
-   probabilities = [float(text.count(char)) / len(text) for char in list(text)]
-   entropy = -sum([p * math.log2(p) for p in probabilities])
+  Returns
+  -------
+  float
+    Returns floating-point representation of the text param's total entropy.
+  """
 
-   return entropy
+  probabilities = [float(text.count(char)) / len(text) for char in list(text)]
+  entropy = -sum([p * math.log2(p) for p in probabilities])
+
+  return entropy
 
 # Finalised Wrapper-method for determining Shannon Entropy + Suspicious Keywords.
 # Returns a Python Dict-object.
