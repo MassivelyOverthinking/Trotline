@@ -56,6 +56,25 @@ def extract_hostname(url: str) -> ExtractResult:
 # Check if the specified domain is Typosquatted using Damerau-Levenshtein Distance
 # If the domain if off by 1 - 2 character changes -> Return True.
 def is_domain_typosquatted(hostname: ExtractResult, domains: list[str], threshold: int) -> bool:
+  """
+  Utilise Damerau-Levenshtein Distance, a measurement of edit distance between 2 string sequences,
+  to check if the specified domain is considered Typosquatted - Utility method in Trotline
+  finalised Data Pipeline.
+  
+  Parameters
+  ----------
+  hostname : tldextract.ExtractResult
+    URL host to be checked for typosquatting.
+  domains : list[str]
+    List of all relevant hostname-strings to check against.
+  threshold : int
+    The measured Damerau-Levenshtein Distance at which the hostname is considered typosquatted.
+
+  Returns
+  -------
+  bool
+    Whether the hostname is condered typosquatted.
+  """
   host_domain = hostname.domain
   for domain in domains:
     distance = pdl_distance(host_domain, domain)   # Calculate the DL-distance.
