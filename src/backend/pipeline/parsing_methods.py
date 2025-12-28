@@ -13,8 +13,22 @@ from src.backend.pipeline.dataset import suspicious_domain_extensions_set
 # ----------------------------------------
 
 # Method for parsing the specified URL and produce a default Dict-object if it fails.
-def parse_url_and_handle_errors(url: str) -> Union[ParseResult, Dict[str, Optional[str]]]:
-  # Parse the URL to retreive critical information.
+def parse_url_and_handle_errors(url: str) -> Union[ParseResult, Dict[str, str | None]]:
+  """
+  Utilise urllib's internal parse operation to extract necessary URL-based information and pass
+  it unto next Pipeline process - Utility method in Trotline finalised Data Pipeline.
+  
+  Parameters
+  ----------
+  url : str
+    String representation of the URL to be parsed. 
+
+  Returns
+  -------
+  urllib.ParseResult | Dict[str, str | None]
+    Returns custom wrapper-class containing parsed URL data or a predifined dictionary instance
+    if urllib's parse functions fails to correctly handle URL-string.
+  """
   try:
     parsed_url = urlparse(url)
 
@@ -33,7 +47,22 @@ def parse_url_and_handle_errors(url: str) -> Union[ParseResult, Dict[str, Option
 
 # Finalised Wrapper method for parsing, processing and formulating data related to the URL.
 # Returns a Python Dict-object with relevant data. 
-def final_url_parser(url: str):
+def final_url_parser(url: str) -> Dict[str, str | int | float]:
+  """
+  Finalized parsing method used to parse suspected URL-string - split it into informative 
+  subsections -, and extract section-related data for better model inference - Utility method
+  in Trotline finalised Data Pipeline.
+  
+  Parameters
+  ----------
+  url : str
+    Possibly scam URL-string to be parsed.
+
+  Returns
+  -------
+  dict[str, str | int | float]
+    A Python dictionary containing URL-related information. 
+  """
   # Handle URL errors and retrieve information.
   parsed_url = parse_url_and_handle_errors(url=url)
 
