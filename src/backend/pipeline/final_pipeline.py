@@ -17,6 +17,23 @@ from src.backend.pipeline.parsing_methods import final_url_parser
 
 # Pipeline method for Website Application
 def finalised_data_pipeline_for_web(url: str) -> pd.Series:
+  """
+  Combined Pipeline method for parsing, extracting and transforming necessary URL-based
+  information and preparing it for final XGBoost modeling. This method wraps all general
+  Pipelines operations into a single endpoint/instance to ensure consistency across
+  functionalities.
+  Used for API-based information extraction.
+
+  Parameters
+  ----------
+  url : str
+    URL-string suspected of being malicious/scam.
+
+  Returns
+  -------
+  pandas.Series
+    Returns a finalized pandas Series-object containing numerical data for XGBoost modeling. 
+  """
   # Validation check for URL-parameter
   if not isinstance(url, str):
     raise ValueError(f"URL must be of Type: str - Current type {type(url)}")
@@ -47,6 +64,23 @@ def finalised_data_pipeline_for_web(url: str) -> pd.Series:
 
 # Pipeline method for PyPi.org Package.
 def finalised_data_pipeline_for_py(url: str) -> Dict[str, Any]:
+  """
+  Combined Pipeline method for parsing, extracting and transforming necessary URL-based
+  information and preparing it for final XGBoost modeling. This method wraps all general
+  Pipelines operations into a single endpoint/instance to ensure consistency across
+  functionalities.
+  Used for website-based information extraction.
+
+  Parameters
+  ----------
+  url : str
+    URL-string suspected of being malicious/scam.
+
+  Returns
+  -------
+  dict[str, Any]
+    Returns a dictionary filled with numerical URL-related data ready for ML modeling.
+  """
   # Validation check for URL-parameter
   if not isinstance(url, str):
     raise ValueError(f"URL must be of Type: str - Current type {type(url)}")
